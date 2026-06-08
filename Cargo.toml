@@ -1,0 +1,32 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/lcm-core",
+    "crates/lcm-cli",
+]
+# The Tauri GUI shell is built separately (it needs webkit2gtk system libs).
+# It path-depends on lcm-core but is not part of the default workspace build.
+exclude = [
+    "gui/src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/KamiGhost1/linux-ca-manager"
+rust-version = "1.74"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+thiserror = "1"
+clap = { version = "4", features = ["derive"] }
+x509-parser = "0.16"
+pem = "3"
+sha2 = "0.10"
+base64 = "0.22"
+libc = "0.2"
+scrypt = { version = "0.11", default-features = false }
+aes-gcm = "0.10"

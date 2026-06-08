@@ -1,0 +1,7 @@
+node_modules
+dist
+# Tauri generated/build artifacts
+src-tauri/target
+src-tauri/gen
+# note: src-tauri/icons/icon.png is committed so the app builds out of the box;
+# run `npm run tauri icon src-tauri/icon.svg` to regenerate the full icon set.

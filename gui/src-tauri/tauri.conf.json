@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "LCM",
+  "version": "0.1.0",
+  "identifier": "org.lcm.LinuxCertManager",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": { "cwd": "..", "script": "npm run dev" },
+    "beforeBuildCommand": { "cwd": "..", "script": "npm run build" }
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "LCM · Linux Cert Manager",
+        "width": 1100,
+        "height": 760,
+        "minWidth": 900,
+        "minHeight": 600
+      }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb"],
+    "category": "Utility",
+    "shortDescription": "Integrate certificates into the Linux trust store",
+    "longDescription": "LCM (Linux Cert Manager) installs ready-made server and client certificates into the right places on a Linux system — the system trust store, browser NSS databases and service locations — from a GUI or CLI, without hand-copying files or remembering per-distro commands.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "linux": {
+      "deb": {
+        "recommends": ["policykit-1", "libnss3-tools", "openssl", "ca-certificates"],
+        "files": {
+          "/usr/bin/lcm": "../../target/release/lcm",
+          "/usr/share/polkit-1/actions/org.lcm.helper.policy": "polkit/org.lcm.helper.policy"
+        }
+      },
+      "rpm": {
+        "recommends": ["polkit", "nss-tools", "openssl", "ca-certificates"],
+        "files": {
+          "/usr/bin/lcm": "../../target/release/lcm",
+          "/usr/share/polkit-1/actions/org.lcm.helper.policy": "polkit/org.lcm.helper.policy"
+        }
+      }
+    }
+  }
+}

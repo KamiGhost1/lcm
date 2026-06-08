@@ -1,0 +1,20 @@
+[package]
+name = "lcm-cli"
+description = "Command-line front end for LCM (Linux Cert Manager)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "lcm"
+path = "src/main.rs"
+
+[dependencies]
+lcm-core = { path = "../lcm-core" }
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+base64.workspace = true
+libc.workspace = true

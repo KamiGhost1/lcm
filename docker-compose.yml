@@ -1,0 +1,55 @@
+# LCM dev environment.
+#
+#   docker compose build         # build the dev image
+#   docker compose up -d         # start a long-running dev container
+#   docker compose exec dev bash # get a shell inside it
+#
+# The source tree is bind-mounted at /workspace; the Cargo registry and the
+# build target dir live in named volumes so rebuilds stay fast and host/container
+# artifacts never clash (host is macOS, container is Linux).
+services:
+  dev:
+    build: .
+    image: lcm-dev:latest
+    container_name: lcm-dev
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - cargo-registry:/usr/local/cargo/registry
+      - target-cache:/workspace/target
+      - gui-node-modules:/workspace/gui/node_modules
+      # Tauri's build dir on a named volume: keeps the heavy release/bundle
+      # build off the slow bind mount. Extract artifacts with `make deb`.
+      - gui-target:/workspace/gui/src-tauri/target
+    ports:
+      # Vite dev server (frontend preview / `tauri dev` webview source).
+      - "5173:5173"
+    # Keep the container alive so `docker compose exec` works for interactive dev.
+    command: sleep infinity
+
+  # Cross-arch build container for producing amd64 (x86_64) artifacts on an
+  # arm64 host via emulation. Separate named volumes keep amd64 build output
+  # from clashing with the native (arm64) `dev` service. Use `make deb-amd64`.
+  dev-amd64:
+    build: .
+    image: lcm-dev-amd64:latest
+    platform: linux/amd64
+    container_name: lcm-dev-amd64
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - cargo-registry-amd64:/usr/local/cargo/registry
+      - target-cache-amd64:/workspace/target
+      - gui-node-modules-amd64:/workspace/gui/node_modules
+      - gui-target-amd64:/workspace/gui/src-tauri/target
+    command: sleep infinity
+
+volumes:
+  cargo-registry:
+  target-cache:
+  gui-node-modules:
+  gui-target:
+  cargo-registry-amd64:
+  target-cache-amd64:
+  gui-node-modules-amd64:
+  gui-target-amd64:

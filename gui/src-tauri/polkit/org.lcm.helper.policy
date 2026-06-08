@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!--
+  polkit policy for LCM's privileged helper.
+
+  pkexec maps a program to this action via the `exec.path` annotation, so when
+  the GUI (or CLI) runs `pkexec /usr/bin/lcm helper`, polkit applies these rules
+  instead of the generic exec action. `auth_admin_keep` caches the admin
+  authorization for the active session (~5 min), so a burst of operations only
+  prompts once. `allow_gui` lets the desktop polkit agent show the dialog.
+-->
+<policyconfig>
+  <vendor>LCM — Linux Cert Manager</vendor>
+  <vendor_url>https://github.com/KamiGhost1/linux-ca-manager</vendor_url>
+
+  <action id="org.lcm.helper">
+    <description>Manage system certificate trust and server certificates</description>
+    <message>Authentication is required to modify the system certificate store</message>
+    <icon_name>application-certificate</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/lcm</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>
